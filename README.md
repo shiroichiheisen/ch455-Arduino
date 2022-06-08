@@ -40,7 +40,7 @@ display.brightness(int brightness);
 To send to all numbers of the display you can use the following function:
 
 ```	
-display.show(int digit0, int dot0, int digit1, int dot1, int digit2, int dot2, int digit3, int dot3);
+display.showWithDots(int digit0, int dot0, int digit1, int dot1, int digit2, int dot2, int digit3, int dot3);
 ```
 
 If you want so set the dot of all numbers use the following function:

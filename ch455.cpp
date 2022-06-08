@@ -712,7 +712,7 @@ void ch455::d3(int digit3, int dot)
     }
 }
 
-void ch455::show(int digit0, int dot0, int digit1, int dot1, int digit2, int dot2, int digit3, int dot3)
+void ch455::showWithDots(int digit0, int dot0, int digit1, int dot1, int digit2, int dot2, int digit3, int dot3)
 {
     d0(digit0, dot0);
     d1(digit1, dot1);
