@@ -28,6 +28,12 @@ display.d3(int number, int dot);
 
 //number is the number to show on display
 //dot is if you want to show a dot or not with the number
+//if you dont use the dot on display, just dont send it:
+
+display.d0(int number);
+display.d1(int number);
+display.d2(int number);
+display.d3(int number);
 ```
 
 To change the brightness of the display you can use the following function:
