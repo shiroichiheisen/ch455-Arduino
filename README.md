@@ -13,9 +13,10 @@ To use this library, you need to download, install the library, and include the 
 To use on your code you need to declare the ch455 object with the sda pin, scl pin and led brightness:
 
 ```	
-ch455 display(int sda, int scl, int brightness);
+ch455 display(int sda, int scl, int brightness, int frequency);
 //max brightness is 8, min brightness is 1
 //If the brightness is not set, the default brightness is 8
+//Frequency is the frequency of the i2c comunication in Hz, default is 100000Hz
 ```
 
 Now to send numbers to the display you can use the following functions:
