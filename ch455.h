@@ -7,7 +7,7 @@
 class ch455
 {
 public:
-	ch455(int sda, int scl, int ledBrightness = 8);
+	ch455(int sda, int scl, int ledBrightness = 8, int frequency = 100000);
 	void d0(int digit0, int dot = 0);
 	void d1(int digit1, int dot = 0);
 	void d2(int digit2, int dot = 0);
@@ -23,7 +23,11 @@ private:
 		dotP0,
 		dotP1,
 		dotP2,
-		dotP3;
+		dotP3,
+		dg0,
+		dg1,
+		dg2,
+		dg3;
 };
 
 #endif

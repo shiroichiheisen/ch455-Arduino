@@ -1,11 +1,12 @@
 #include "ch455.h"
 #include "Wire.h"
 
-ch455::ch455(int sda, int scl, int brightness)
+ch455::ch455(int sda, int scl, int brightness, int frequency)
 {
     if (brightness > 8 || brightness < 1)
         brightness = 8;
     Wire.begin(sda, scl);
+    Wire.setClock(frequency);
     switch (brightness)
     {
     case 1:
@@ -724,7 +725,7 @@ void ch455::show(int digit0, int digit1, int digit2, int digit3)
 {
     if (!dotset)
     {
-        Serial.println("Dot not set");
+        Serial.println("CH455 Library: Please set dot position first.");
         return;
     }
     d0(digit0, dotP0);
