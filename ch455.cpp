@@ -1,713 +1,175 @@
 #include "ch455.h"
 #include "Wire.h"
 
-ch455::ch455(int sda, int scl, int brightness, int frequency)
+void send(int id, int data)
 {
-    if (brightness > 8 || brightness < 1)
-        brightness = 8;
-    Wire.begin(sda, scl);
-    Wire.setClock(frequency);
-    switch (brightness)
-    {
-    case 1:
-        Wire.beginTransmission(36);
-        Wire.write(0x11);
-        Wire.endTransmission();
-        break;
-    case 2:
-        Wire.beginTransmission(36);
-        Wire.write(0x21);
-        Wire.endTransmission();
-        break;
-    case 3:
-        Wire.beginTransmission(36);
-        Wire.write(0x31);
-        Wire.endTransmission();
-        break;
-    case 4:
-        Wire.beginTransmission(36);
-        Wire.write(0x41);
-        Wire.endTransmission();
-        break;
-    case 5:
-        Wire.beginTransmission(36);
-        Wire.write(0x51);
-        Wire.endTransmission();
-        break;
-    case 6:
-        Wire.beginTransmission(36);
-        Wire.write(0x61);
-        Wire.endTransmission();
-        break;
-    case 7:
-        Wire.beginTransmission(36);
-        Wire.write(0x71);
-        Wire.endTransmission();
-        break;
-    case 8:
-        Wire.beginTransmission(36);
-        Wire.write(0x01);
-        Wire.endTransmission();
-        break;
-    }
+    Wire.beginTransmission(id);
+    Wire.write(data);
+    Wire.endTransmission();
 }
 
 void ch455::brightness(int brightness)
 {
-    if (brightness > 8 || brightness < 1)
-        return;
+    if (brightness > 8)
+        brightness = 8;
+    else if (brightness < 1)
+        brightness = 1;
     switch (brightness)
     {
     case 1:
-        Wire.beginTransmission(36);
-        Wire.write(0x11);
-        Wire.endTransmission();
+        send(36, 0x11);
         break;
     case 2:
-        Wire.beginTransmission(36);
-        Wire.write(0x21);
-        Wire.endTransmission();
+        send(36, 0x21);
         break;
     case 3:
-        Wire.beginTransmission(36);
-        Wire.write(0x31);
-        Wire.endTransmission();
+        send(36, 0x31);
         break;
     case 4:
-        Wire.beginTransmission(36);
-        Wire.write(0x41);
-        Wire.endTransmission();
+        send(36, 0x41);
         break;
     case 5:
-        Wire.beginTransmission(36);
-        Wire.write(0x51);
-        Wire.endTransmission();
+        send(36, 0x51);
         break;
     case 6:
-        Wire.beginTransmission(36);
-        Wire.write(0x61);
-        Wire.endTransmission();
+        send(36, 0x61);
         break;
     case 7:
-        Wire.beginTransmission(36);
-        Wire.write(0x71);
-        Wire.endTransmission();
+        send(36, 0x71);
         break;
     case 8:
-        Wire.beginTransmission(36);
-        Wire.write(0x01);
-        Wire.endTransmission();
+        send(36, 0x01);
         break;
     }
 }
 
-void ch455::d0(int digit0, int dot)
+ch455::ch455() {}
+
+void ch455::begin(int sda, int scl, int brightness)
 {
-    if (digit0 > 9)
-        return;
-    if (!digit0)
+    if (brightness > 8)
+        brightness = 8;
+    else if (brightness < 1)
+        brightness = 1;
+        
+    Wire.begin(sda, scl);
+
+    switch (brightness)
     {
-        if (dot)
-        {
-            Wire.beginTransmission(52);
-            Wire.write(0xBF);
-            Wire.endTransmission();
-        }
-        else
-        {
-            Wire.beginTransmission(52);
-            Wire.write(0x3F);
-            Wire.endTransmission();
-        }
-    }
-    else
-    {
-        switch (digit0)
-        {
-        case 1:
-            if (dot)
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0x86);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0x06);
-                Wire.endTransmission();
-            }
-            break;
-        case 2:
-            if (dot)
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0xDB);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0x5B);
-                Wire.endTransmission();
-            }
-            break;
-        case 3:
-            if (dot)
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0xCF);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0x4F);
-                Wire.endTransmission();
-            }
-            break;
-        case 4:
-            if (dot)
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0xE6);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0x66);
-                Wire.endTransmission();
-            }
-            break;
-        case 5:
-            if (dot)
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0xED);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0x6D);
-                Wire.endTransmission();
-            }
-            break;
-        case 6:
-            if (dot)
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0xFD);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0x7D);
-                Wire.endTransmission();
-            }
-            break;
-        case 7:
-            if (dot)
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0xA7);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0x27);
-                Wire.endTransmission();
-            }
-            break;
-        case 8:
-            if (dot)
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0xFF);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0x7F);
-                Wire.endTransmission();
-            }
-            break;
-        case 9:
-            if (dot)
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0xEF);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(52);
-                Wire.write(0x6F);
-                Wire.endTransmission();
-            }
-            break;
-        }
+    case 1:
+        send(36, 0x11);
+        break;
+    case 2:
+        send(36, 0x21);
+        break;
+    case 3:
+        send(36, 0x31);
+        break;
+    case 4:
+        send(36, 0x41);
+        break;
+    case 5:
+        send(36, 0x51);
+        break;
+    case 6:
+        send(36, 0x61);
+        break;
+    case 7:
+        send(36, 0x71);
+        break;
+    case 8:
+        send(36, 0x01);
+        break;
     }
 }
 
-void ch455::d1(int digit1, int dot)
+void ch455::digit(int digit, int number, int dot)
 {
-    if (digit1 > 9)
-        return;
-    if (!digit1)
-    {
-        if (dot)
-        {
-            Wire.beginTransmission(53);
-            Wire.write(0xBF);
-            Wire.endTransmission();
-        }
-        else
-        {
-            Wire.beginTransmission(53);
-            Wire.write(0x3F);
-            Wire.endTransmission();
-        }
-    }
-    else
-    {
-        switch (digit1)
-        {
-        case 1:
-            if (dot)
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0x86);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0x06);
-                Wire.endTransmission();
-            }
-            break;
-        case 2:
-            if (dot)
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0xDB);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0x5B);
-                Wire.endTransmission();
-            }
-            break;
-        case 3:
-            if (dot)
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0xCF);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0x4F);
-                Wire.endTransmission();
-            }
-            break;
-        case 4:
-            if (dot)
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0xE6);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0x66);
-                Wire.endTransmission();
-            }
-            break;
-        case 5:
-            if (dot)
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0xED);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0x6D);
-                Wire.endTransmission();
-            }
-            break;
-        case 6:
-            if (dot)
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0xFD);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0x7D);
-                Wire.endTransmission();
-            }
-            break;
-        case 7:
-            if (dot)
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0xA7);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0x27);
-                Wire.endTransmission();
-            }
-            break;
-        case 8:
-            if (dot)
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0xFF);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0x7F);
-                Wire.endTransmission();
-            }
-            break;
-        case 9:
-            if (dot)
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0xEF);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(53);
-                Wire.write(0x6F);
-                Wire.endTransmission();
-            }
-            break;
-        }
-    }
-}
+    if (number > 9)
+        Serial.println("Number is too big, max is 9");
 
-void ch455::d2(int digit2, int dot)
-{
-    if (digit2 > 9)
-        return;
-    if (!digit2)
-    {
-        if (dot)
-        {
-            Wire.beginTransmission(54);
-            Wire.write(0xBF);
-            Wire.endTransmission();
-        }
-        else
-        {
-            Wire.beginTransmission(54);
-            Wire.write(0x3F);
-            Wire.endTransmission();
-        }
-    }
-    else
-    {
-        switch (digit2)
-        {
-        case 1:
-            if (dot)
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0x86);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0x06);
-                Wire.endTransmission();
-            }
-            break;
-        case 2:
-            if (dot)
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0xDB);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0x5B);
-                Wire.endTransmission();
-            }
-            break;
-        case 3:
-            if (dot)
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0xCF);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0x4F);
-                Wire.endTransmission();
-            }
-            break;
-        case 4:
-            if (dot)
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0xE6);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0x66);
-                Wire.endTransmission();
-            }
-            break;
-        case 5:
-            if (dot)
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0xED);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0x6D);
-                Wire.endTransmission();
-            }
-            break;
-        case 6:
-            if (dot)
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0xFD);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0x7D);
-                Wire.endTransmission();
-            }
-            break;
-        case 7:
-            if (dot)
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0xA7);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0x27);
-                Wire.endTransmission();
-            }
-            break;
-        case 8:
-            if (dot)
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0xFF);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0x7F);
-                Wire.endTransmission();
-            }
-            break;
-        case 9:
-            if (dot)
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0xEF);
-                Wire.endTransmission();
-            }
-            else
-            {
-                Wire.beginTransmission(54);
-                Wire.write(0x6F);
-                Wire.endTransmission();
-            }
-            break;
-        }
-    }
-}
+    int digitId;
 
-void ch455::d3(int digit3, int dot)
-{
-    if (digit3 > 9)
-        return;
-    if (!digit3)
+    switch (digit)
+    {
+    case 0:
+        digitId = 52;
+        break;
+    case 1:
+        digitId = 53;
+        break;
+    case 2:
+        digitId = 54;
+        break;
+    case 3:
+        digitId = 55;
+        break;
+    }
+
+    if (!number)
     {
         if (dot)
-        {
-            Wire.beginTransmission(55);
-            Wire.write(0xBF);
-            Wire.endTransmission();
-        }
+            send(digitId, 0xBF);
         else
-        {
-            Wire.beginTransmission(55);
-            Wire.write(0x3F);
-            Wire.endTransmission();
-        }
+            send(digitId, 0x3F);
     }
     else
     {
-        switch (digit3)
+        switch (number)
         {
         case 1:
             if (dot)
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0x86);
-                Wire.endTransmission();
-            }
+                send(digitId, 0x86);
             else
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0x06);
-                Wire.endTransmission();
-            }
+                send(digitId, 0x06);
             break;
         case 2:
             if (dot)
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0xDB);
-                Wire.endTransmission();
-            }
+                send(digitId, 0xDB);
             else
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0x5B);
-                Wire.endTransmission();
-            }
+                send(digitId, 0x5B);
             break;
         case 3:
             if (dot)
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0xCF);
-                Wire.endTransmission();
-            }
+                send(digitId, 0xCF);
             else
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0x4F);
-                Wire.endTransmission();
-            }
+                send(digitId, 0x4F);
             break;
         case 4:
             if (dot)
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0xE6);
-                Wire.endTransmission();
-            }
+                send(digitId, 0xE6);
             else
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0x66);
-                Wire.endTransmission();
-            }
+                send(digitId, 0x66);
             break;
         case 5:
             if (dot)
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0xED);
-                Wire.endTransmission();
-            }
+                send(digitId, 0xED);
             else
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0x6D);
-                Wire.endTransmission();
-            }
+                send(digitId, 0x6D);
             break;
         case 6:
             if (dot)
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0xFD);
-                Wire.endTransmission();
-            }
+                send(digitId, 0xFD);
             else
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0x7D);
-                Wire.endTransmission();
-            }
+                send(digitId, 0x7D);
             break;
         case 7:
             if (dot)
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0xA7);
-                Wire.endTransmission();
-            }
+                send(digitId, 0xA7);
             else
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0x27);
-                Wire.endTransmission();
-            }
+                send(digitId, 0x27);
             break;
         case 8:
             if (dot)
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0xFF);
-                Wire.endTransmission();
-            }
+                send(digitId, 0xFF);
             else
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0x7F);
-                Wire.endTransmission();
-            }
+                send(digitId, 0x7F);
             break;
         case 9:
             if (dot)
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0xEF);
-                Wire.endTransmission();
-            }
+                send(digitId, 0xEF);
             else
-            {
-                Wire.beginTransmission(55);
-                Wire.write(0x6F);
-                Wire.endTransmission();
-            }
+                send(digitId, 0x6F);
             break;
         }
     }
@@ -715,10 +177,10 @@ void ch455::d3(int digit3, int dot)
 
 void ch455::showWithDots(int digit0, int dot0, int digit1, int dot1, int digit2, int dot2, int digit3, int dot3)
 {
-    d0(digit0, dot0);
-    d1(digit1, dot1);
-    d2(digit2, dot2);
-    d3(digit3, dot3);
+    digit(0, digit0, dot0);
+    digit(1, digit1, dot1);
+    digit(2, digit2, dot2);
+    digit(3, digit3, dot3);
 }
 
 void ch455::show(int digit0, int digit1, int digit2, int digit3)
@@ -728,10 +190,10 @@ void ch455::show(int digit0, int digit1, int digit2, int digit3)
         Serial.println("CH455 Library: Please set dot position first.");
         return;
     }
-    d0(digit0, dotP0);
-    d1(digit1, dotP1);
-    d2(digit2, dotP2);
-    d3(digit3, dotP3);
+    digit(0, digit0, dotP0);
+    digit(1, digit1, dotP1);
+    digit(2, digit2, dotP2);
+    digit(3, digit3, dotP3);
 }
 
 void ch455::dotPosition(int dot0, int dot1, int dot2, int dot3)
