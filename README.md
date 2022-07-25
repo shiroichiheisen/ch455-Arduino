@@ -10,31 +10,30 @@ To use this library, you need to download, install the library, and include the 
 #include <ch455.h>
 ```
 
-To use on your code you need to declare the ch455 object with the sda pin, scl pin and led brightness:
+To use on your code you need to declare the ch455 object and begin with the sda pin, scl pin and led brightness:
 
 ```	
-ch455 display(int sda, int scl, int brightness, int frequency);
+ch455 display;
+
+setup{
+ch455 display(int sda, int scl, int brightness);
+}
+
 //max brightness is 8, min brightness is 1
 //If the brightness is not set, the default brightness is 8
-//Frequency is the frequency of the i2c comunication in Hz, default is 100000Hz
 ```
 
 Now to send numbers to the display you can use the following functions:
 
 ```	
-display.d0(int number, int dot);
-display.d1(int number, int dot);
-display.d2(int number, int dot);
-display.d3(int number, int dot);
+display.digit(int digit, int number, int dot);
 
+//digit is the digit on the display
 //number is the number to show on display
 //dot is if you want to show a dot or not with the number
 //if you dont use the dot on display, just dont send it:
 
-display.d0(int number);
-display.d1(int number);
-display.d2(int number);
-display.d3(int number);
+display.digit(int digit, int number);
 ```
 
 To change the brightness of the display you can use the following function:
