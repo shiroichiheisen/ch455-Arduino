@@ -47,40 +47,8 @@ ch455::ch455() {}
 
 void ch455::begin(int sda, int scl, int brightness)
 {
-    if (brightness > 8)
-        brightness = 8;
-    else if (brightness < 1)
-        brightness = 1;
-        
     Wire.begin(sda, scl);
-
-    switch (brightness)
-    {
-    case 1:
-        send(36, 0x11);
-        break;
-    case 2:
-        send(36, 0x21);
-        break;
-    case 3:
-        send(36, 0x31);
-        break;
-    case 4:
-        send(36, 0x41);
-        break;
-    case 5:
-        send(36, 0x51);
-        break;
-    case 6:
-        send(36, 0x61);
-        break;
-    case 7:
-        send(36, 0x71);
-        break;
-    case 8:
-        send(36, 0x01);
-        break;
-    }
+    ch455::brightness(brightness);
 }
 
 void ch455::digit(int digit, int number, int dot)
