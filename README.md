@@ -16,7 +16,8 @@ To use on your code you need to declare the ch455 object and begin with the sda 
 ch455 display;
 
 setup{
-ch455 display(int sda, int scl, int brightness);
+display.begin(int sda, int scl, int brightness); //if you want to change sda and scl pins
+display.begin(int brightness); //for attiny devices or if you dont want to change sda and scl pins
 }
 
 //max brightness is 8, min brightness is 1

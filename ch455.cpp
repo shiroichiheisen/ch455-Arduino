@@ -45,6 +45,12 @@ void ch455::brightness(int brightness)
 
 ch455::ch455() {}
 
+void ch455::begin(int brightness)
+{
+    Wire.begin();
+    ch455::brightness(brightness);
+}
+
 void ch455::begin(int sda, int scl, int brightness)
 {
     Wire.begin(sda, scl);
