@@ -8,7 +8,7 @@ void send(int id, int data)
     Wire.endTransmission();
 }
 
-void ch455::brightness(int brightness)
+void ch455::brightness(uint8_t brightness)
 {
     if (brightness > 8)
         brightness = 8;
@@ -45,19 +45,19 @@ void ch455::brightness(int brightness)
 
 ch455::ch455() {}
 
-void ch455::begin(int brightness)
+void ch455::begin(uint8_t brightness)
 {
     Wire.begin();
     ch455::brightness(brightness);
 }
 
-void ch455::begin(int sda, int scl, int brightness)
+void ch455::begin(uint8_t sda, uint8_t scl, uint8_t brightness)
 {
     Wire.begin(sda, scl);
     ch455::brightness(brightness);
 }
 
-void ch455::digit(int digit, int number, int dot)
+void ch455::digit(uint8_t digit, uint8_t number, bool dot)
 {
     if (number > 9)
         Serial.println("Number is too big, max is 9");
@@ -149,7 +149,7 @@ void ch455::digit(int digit, int number, int dot)
     }
 }
 
-void ch455::showWithDots(int digit0, int dot0, int digit1, int dot1, int digit2, int dot2, int digit3, int dot3)
+void ch455::showWithDots(uint8_t digit0, bool dot0, uint8_t digit1, bool dot1, uint8_t digit2, bool dot2, uint8_t digit3, bool dot3)
 {
     digit(0, digit0, dot0);
     digit(1, digit1, dot1);
@@ -157,7 +157,7 @@ void ch455::showWithDots(int digit0, int dot0, int digit1, int dot1, int digit2,
     digit(3, digit3, dot3);
 }
 
-void ch455::show(int digit0, int digit1, int digit2, int digit3)
+void ch455::show(uint8_t digit0, uint8_t digit1, uint8_t digit2, uint8_t digit3)
 {
     if (!dotset)
     {
@@ -170,7 +170,7 @@ void ch455::show(int digit0, int digit1, int digit2, int digit3)
     digit(3, digit3, dotP3);
 }
 
-void ch455::dotPosition(int dot0, int dot1, int dot2, int dot3)
+void ch455::dotPosition(bool dot0, bool dot1, bool dot2, bool dot3)
 {
     dotP0 = dot0;
     dotP1 = dot1;

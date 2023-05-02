@@ -8,25 +8,21 @@ class ch455
 {
 public:
 	ch455();
-	void begin(int sda, int scl, int ledBrightness = 8);
-	void begin(int ledBrightness = 8);
-	void digit(int digit, int number, int dot = 0);
-	void dotPosition(int dot0, int dot1 = 0, int dot2 = 0, int dot3 = 0);
-	void show(int digit0, int digit1 = 0, int digit2 = 0, int digit3 = 0);
-	void showWithDots(int digit0, int dot0 = 0, int digit1 = 0, int dot1 = 0, int digit2 = 0, int dot2 = 0, int digit3 = 0, int dot3 = 0);
-	void brightness(int brightness);
+	void begin(uint8_t sda, uint8_t scl, uint8_t ledBrightness = 8);
+	void begin(uint8_t ledBrightness = 8);
+	void digit(uint8_t digit, uint8_t number, bool dot = 0);
+	void dotPosition(bool dot0, bool dot1 = 0, bool dot2 = 0, bool dot3 = 0);
+	void show(uint8_t digit0, uint8_t digit1 = 0, uint8_t digit2 = 0, uint8_t digit3 = 0);
+	void showWithDots(uint8_t digit0, bool dot0 = 0, uint8_t digit1 = 0, bool dot1 = 0, uint8_t digit2 = 0, bool dot2 = 0, uint8_t digit3 = 0, bool dot3 = 0);
+	void brightness(uint8_t brightness);
 
 private:
-	int
+	bool
 		dotset = 0,
 		dotP0,
 		dotP1,
 		dotP2,
-		dotP3,
-		dg0,
-		dg1,
-		dg2,
-		dg3;
+		dotP3;
 };
 
 #endif
