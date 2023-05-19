@@ -8,33 +8,58 @@ void send(uint8_t id, uint8_t data)
     Wire.endTransmission();
 }
 
-void ch455::brightness(uint8_t brightness)
+void ch455::configure(uint8_t brightness, bool enabled, bool sleep, bool sevenSegment)
 {
     if (brightness > 8)
         brightness = 8;
     else if (brightness < 1)
         brightness = 1;
 
-    uint8_t bright = 1;
-
     if (brightness < 8)
-        bright += (16 * brightness);
+        brightness = (16 * brightness);
 
-    send(36, bright);
+    bitWrite(brightness, 0, enabled);
+    bitWrite(brightness, 2, sleep);
+    bitWrite(brightness, 3, sevenSegment);
+
+    send(36, brightness);
 }
 
 ch455::ch455() {}
 
-void ch455::begin(uint8_t brightness)
+void ch455::begin(uint8_t brightness, bool enabled, bool sleep, bool sevenSegment)
 {
     Wire.begin();
-    ch455::brightness(brightness);
+    ch455::configure(brightness);
 }
 
-void ch455::begin(uint8_t sda, uint8_t scl, uint8_t brightness)
+void ch455::begin(uint8_t sda, uint8_t scl, uint8_t brightness, bool enabled, bool sleep, bool sevenSegment)
 {
     Wire.begin(sda, scl);
-    ch455::brightness(brightness);
+    ch455::configure(brightness);
+}
+
+uint8_t ch455::readKeyboard()
+{
+    Wire.requestFrom(0x4f, 1);
+    return Wire.read();
+}
+
+void ch455::customDigit(uint8_t digit, bool a, bool b, bool c, bool d, bool e, bool f, bool g, bool dot)
+{
+    byte digitData = 0x00;
+    bitWrite(digitData, 0, a);
+    bitWrite(digitData, 1, b);
+    bitWrite(digitData, 2, c);
+    bitWrite(digitData, 3, d);
+    bitWrite(digitData, 4, e);
+    bitWrite(digitData, 5, f);
+    bitWrite(digitData, 6, g);
+    bitWrite(digitData, 7, dot);
+
+    digit += 52;
+
+    send(digit, digitData);
 }
 
 void ch455::digit(uint8_t digit, uint8_t number, bool dot)
@@ -45,7 +70,7 @@ void ch455::digit(uint8_t digit, uint8_t number, bool dot)
         return;
     }
 
-    uint8_t digitId = 52 + digit;
+    digit += 52;
 
     uint8_t digitData = 0x3F;
 
@@ -81,7 +106,7 @@ void ch455::digit(uint8_t digit, uint8_t number, bool dot)
     }
 
     bitWrite(digitData, 7, dot);
-    send(digitId, digitData);
+    send(digit, digitData);
 }
 
 void ch455::showWithDots(uint8_t digit0, bool dot0, uint8_t digit1, bool dot1, uint8_t digit2, bool dot2, uint8_t digit3, bool dot3)

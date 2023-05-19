@@ -1,7 +1,0 @@
-ch455	KEYWORD1
-begin	KEYWORD2
-digit	KEYWORD2
-dotPosition KEYWORD2
-show KEYWORD2
-showWithDots KEYWORD2
-brightness KEYWORD2

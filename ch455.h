@@ -7,14 +7,52 @@
 class ch455
 {
 public:
+	enum digitSegReadUnit_t
+	{
+		CH455_DIG0_SEG0 = 0x04,
+		CH455_DIG0_SEG1 = 0x0c,
+		CH455_DIG0_SEG2 = 0x14,
+		CH455_DIG0_SEG3 = 0x1c,
+		CH455_DIG0_SEG4 = 0x24,
+		CH455_DIG0_SEG5 = 0x2c,
+		CH455_DIG0_SEG6 = 0x34,
+		CH455_DIG0_SEG0_1 = 0x3c,
+		CH455_DIG1_SEG0 = 0x05,
+		CH455_DIG1_SEG1 = 0x0d,
+		CH455_DIG1_SEG2 = 0x15,
+		CH455_DIG1_SEG3 = 0x1d,
+		CH455_DIG1_SEG4 = 0x25,
+		CH455_DIG1_SEG5 = 0x2d,
+		CH455_DIG1_SEG6 = 0x35,
+		CH455_DIG1_SEG0_1 = 0x3d,
+		CH455_DIG2_SEG0 = 0x06,
+		CH455_DIG2_SEG1 = 0x0e,
+		CH455_DIG2_SEG2 = 0x16,
+		CH455_DIG2_SEG3 = 0x1e,
+		CH455_DIG2_SEG4 = 0x26,
+		CH455_DIG2_SEG5 = 0x2e,
+		CH455_DIG2_SEG6 = 0x36,
+		CH455_DIG2_SEG0_1 = 0x3e,
+		CH455_DIG3_SEG0 = 0x07,
+		CH455_DIG3_SEG1 = 0x0f,
+		CH455_DIG3_SEG2 = 0x17,
+		CH455_DIG3_SEG3 = 0x1f,
+		CH455_DIG3_SEG4 = 0x27,
+		CH455_DIG3_SEG5 = 0x2f,
+		CH455_DIG3_SEG6 = 0x37,
+		CH455_DIG3_SEG0_1 = 0x3f,
+	};
+
 	ch455();
-	void begin(uint8_t sda, uint8_t scl, uint8_t ledBrightness = 8);
-	void begin(uint8_t ledBrightness = 8);
+	void begin(uint8_t sda, uint8_t scl, uint8_t ledBrightness = 8, bool enabled = true, bool sleep = false, bool sevenSegment = false);
+	void begin(uint8_t ledBrightness = 8, bool enabled = true, bool sleep = false, bool sevenSegment = false);
+	void customDigit(uint8_t digit, bool a, bool b = 0, bool c = 0, bool d = 0, bool e = 0, bool f = 0, bool g = 0, bool dot = 0);
+	uint8_t readKeyboard();
 	void digit(uint8_t digit, uint8_t number, bool dot = 0);
 	void dotPosition(bool dot0, bool dot1 = 0, bool dot2 = 0, bool dot3 = 0);
 	void show(uint8_t digit0, uint8_t digit1 = 0, uint8_t digit2 = 0, uint8_t digit3 = 0);
 	void showWithDots(uint8_t digit0, bool dot0 = 0, uint8_t digit1 = 0, bool dot1 = 0, uint8_t digit2 = 0, bool dot2 = 0, uint8_t digit3 = 0, bool dot3 = 0);
-	void brightness(uint8_t brightness);
+	void configure(uint8_t brightness, bool enabled = true, bool sleep = false, bool sevenSegment = false);
 
 private:
 	bool
