@@ -32,16 +32,27 @@ void ch455::configure(uint8_t brightness, bool enabled, bool sleep, bool sevenSe
 
 ch455::ch455() {}
 
-void ch455::begin(uint8_t brightness, bool enabled, bool sleep, bool sevenSegment)
+void ch455::begin(uint8_t brightness, int8_t interruptPin, bool enabled, bool sleep, bool sevenSegment)
 {
     Wire.begin();
+    intPin = interruptPin;
     ch455::configure(brightness);
 }
 
-void ch455::begin(uint8_t sda, uint8_t scl, uint8_t brightness, bool enabled, bool sleep, bool sevenSegment)
+void ch455::begin(uint8_t sda, uint8_t scl, uint8_t brightness, int8_t interruptPin, bool enabled, bool sleep, bool sevenSegment)
 {
     Wire.begin(sda, scl);
+    intPin = interruptPin;
     ch455::configure(brightness);
+}
+
+uint8_t *ch455::readKeyboardLoop()
+{
+    if (!digitalRead(intPin))
+    {
+        delay(1);
+        return ch455::readKeyboard();
+    }
 }
 
 uint8_t *ch455::readKeyboard()
