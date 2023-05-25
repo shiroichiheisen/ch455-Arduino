@@ -15,12 +15,17 @@ void ch455::configure(uint8_t brightness, bool enabled, bool sleep, bool sevenSe
     else if (brightness < 1)
         brightness = 1;
 
-    if (brightness < 8)
-        brightness = (16 * brightness);
+    brightness -= 1;
+
+    bitWrite(brightness, 4, bitRead(brightness, 0));
+    bitWrite(brightness, 5, bitRead(brightness, 1));
+    bitWrite(brightness, 6, bitRead(brightness, 2));
 
     bitWrite(brightness, 0, enabled);
+    bitWrite(brightness, 1, 0);
     bitWrite(brightness, 2, sleep);
     bitWrite(brightness, 3, sevenSegment);
+    bitWrite(brightness, 7, 0);
 
     send(36, brightness);
 }
