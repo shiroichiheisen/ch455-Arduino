@@ -48,11 +48,12 @@ void ch455::begin(uint8_t sda, uint8_t scl, uint8_t brightness, int8_t interrupt
 
 uint8_t *ch455::readKeyboardLoop()
 {
-    if (!digitalRead(intPin))
-    {
-        delay(1);
-        return ch455::readKeyboard();
-    }
+    if (intPin != -1)
+        if (!digitalRead(intPin))
+        {
+            delay(1);
+            return ch455::readKeyboard();
+        }
 }
 
 uint8_t *ch455::readKeyboard()
