@@ -10,124 +10,110 @@ void send(uint8_t id, uint8_t data)
 
 void ch455::configure(uint8_t brightness, bool enabled, bool sleep, bool sevenSegment)
 {
-    constrain(brightness, 1, 8);
-    brightness -= 1;
+    if (brightness > 8)
+        brightness = 8;
+    else if (brightness < 1)
+        brightness = 1;
 
-    uint8_t data = 0;
+    if (brightness < 8)
+        brightness = (16 * brightness);
 
-    data |= enabled;
-    data |= sleep << 2;
-    data |= sevenSegment << 3;
-    data |= brightness << 4;
+    bitWrite(brightness, 0, enabled);
+    bitWrite(brightness, 2, sleep);
+    bitWrite(brightness, 3, sevenSegment);
 
-    send(36, data);
+    send(36, brightness);
 }
 
 ch455::ch455() {}
 
-void ch455::begin(uint8_t brightness, int8_t interruptPin, bool enabled, bool sleep, bool sevenSegment)
+void ch455::begin(uint8_t brightness, bool enabled, bool sleep, bool sevenSegment)
 {
     Wire.begin();
-    intPin = interruptPin;
-    configure(brightness);
+    ch455::configure(brightness);
 }
 
-void ch455::begin(uint8_t sda, uint8_t scl, uint8_t brightness, int8_t interruptPin, bool enabled, bool sleep, bool sevenSegment)
+void ch455::begin(uint8_t sda, uint8_t scl, uint8_t brightness, bool enabled, bool sleep, bool sevenSegment)
 {
     Wire.begin(sda, scl);
-    intPin = interruptPin;
-    configure(brightness);
+    ch455::configure(brightness);
 }
 
-uint8_t *ch455::readKeyboardLoop()
-{
-    if (intPin != -1)
-        if (!digitalRead(intPin))
-        {
-            delay(1);
-            return readKeyboard();
-        }
-}
-
-uint8_t *ch455::readKeyboard()
+uint8_t ch455::readKeyboard()
 {
     Wire.requestFrom(0x4f, 1);
-    uint8_t readKey = Wire.read();
-
-    uint8_t digitRead = 0;
-    digitRead = readKey & 0b11;
-
-    uint8_t segRead = 0x00;
-    segRead = readKey & 0b111000;
-
-    uint8_t keyPressed = 0;
-    keyPressed = readKey & 0b1000000;
-
-    uint8_t returnData[3] = {digitRead, segRead, keyPressed};
-
-    return returnData;
+    return Wire.read();
 }
 
-void ch455::customDigit(uint8_t digit, bool a, bool b, bool c, bool d, bool e, bool f, bool g, bool dot)
+void ch455::customDigit(uint8_t digit, bool seg0, bool seg1, bool seg2, bool seg3, bool seg4, bool seg5, bool seg6, bool seg7)
 {
+    byte digitData = 0x00;
+    bitWrite(digitData, 0, seg0);
+    bitWrite(digitData, 1, seg1);
+    bitWrite(digitData, 2, seg2);
+    bitWrite(digitData, 3, seg3);
+    bitWrite(digitData, 4, seg4);
+    bitWrite(digitData, 5, seg5);
+    bitWrite(digitData, 6, seg6);
+    bitWrite(digitData, 7, seg7);
 
-    uint8_t digitData = 0;
-    bitWrite(digitData, 0, a);
-    bitWrite(digitData, 1, b);
-    bitWrite(digitData, 2, c);
-    bitWrite(digitData, 3, d);
-    bitWrite(digitData, 4, e);
-    bitWrite(digitData, 5, f);
-    bitWrite(digitData, 6, g);
-    bitWrite(digitData, 7, dot);
+    digit += 52;
 
-    uint8_t digitToSend = 0b1101000;
-    digitToSend |= digit << 1;
+    send(digit, digitData);
+}
 
-    send(digitToSend, digitData); // send data
+void ch455::customDigit(uint8_t digit, uint8_t digitData)
+{
+    digit += 52;
+
+    send(digit, digitData);
 }
 
 void ch455::digit(uint8_t digit, uint8_t number, bool dot)
 {
-    uint8_t digitToSend = 0b1101000;
-    digitToSend |= digit << 1;
+    if (number > 9 || digit > 3)
+    {
+        Serial.println("CH455 Library: Number or digit is too big, max 9 for number and max 3 for digit");
+        return;
+    }
 
-    uint8_t digitData = 0x3F; // zero by default
+    digit += 52;
+
+    uint8_t digitData = 0x3F;
 
     switch (number)
     {
     case 1:
-        digitData = 0x06; // one
+        digitData = 0x06;
         break;
     case 2:
-        digitData = 0x5B; // two
+        digitData = 0x5B;
         break;
     case 3:
-        digitData = 0x4F; // three
+        digitData = 0x4F;
         break;
     case 4:
-        digitData = 0x66; // four
+        digitData = 0x66;
         break;
     case 5:
-        digitData = 0x6D; // five
+        digitData = 0x6D;
         break;
     case 6:
-        digitData = 0x7D; // six
+        digitData = 0x7D;
         break;
     case 7:
-        digitData = 0x27; // seven
+        digitData = 0x27;
         break;
     case 8:
-        digitData = 0x7F; // eight
+        digitData = 0x7F;
         break;
     case 9:
-        digitData = 0x6F; // nine
+        digitData = 0x6F;
         break;
     }
 
-    digitData |= dot << 7; // dot position
-
-    send(digitToSend, digitData); // send data
+    bitWrite(digitData, 7, dot);
+    send(digit, digitData);
 }
 
 void ch455::showWithDots(uint8_t digit0, bool dot0, uint8_t digit1, bool dot1, uint8_t digit2, bool dot2, uint8_t digit3, bool dot3)
@@ -140,6 +126,11 @@ void ch455::showWithDots(uint8_t digit0, bool dot0, uint8_t digit1, bool dot1, u
 
 void ch455::show(uint8_t digit0, uint8_t digit1, uint8_t digit2, uint8_t digit3)
 {
+    if (!dotset)
+    {
+        Serial.println("CH455 Library: Please set dot position first.");
+        return;
+    }
     digit(0, digit0, dotP0);
     digit(1, digit1, dotP1);
     digit(2, digit2, dotP2);
