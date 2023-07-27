@@ -44,11 +44,11 @@ public:
 	};
 
 	ch455();
-	void begin(uint8_t sda, uint8_t scl, uint8_t ledBrightness = 8, int8_t interruptPin = -1, bool enabled = true, bool sleep = false, bool sevenSegment = false);
-	void begin(uint8_t ledBrightness = 8, int8_t interruptPin = -1, bool enabled = true, bool sleep = false, bool sevenSegment = false);
-	void customDigit(uint8_t digit, bool a, bool b = 0, bool c = 0, bool d = 0, bool e = 0, bool f = 0, bool g = 0, bool dot = 0);
-	uint8_t *readKeyboard();
-	uint8_t *readKeyboardLoop();
+	void begin(uint8_t sda, uint8_t scl, uint8_t ledBrightness = 8, bool enabled = true, bool sleep = false, bool sevenSegment = false);
+	void begin(uint8_t ledBrightness = 8, bool enabled = true, bool sleep = false, bool sevenSegment = false);
+	void customDigit(uint8_t digit, bool seg0, bool seg1, bool seg2, bool seg3, bool seg4, bool seg5, bool seg6, bool seg7);
+	void customDigit(uint8_t digit, uint8_t digitData);
+	uint8_t readKeyboard();
 	void digit(uint8_t digit, uint8_t number, bool dot = 0);
 	void dotPosition(bool dot0, bool dot1 = 0, bool dot2 = 0, bool dot3 = 0);
 	void show(uint8_t digit0, uint8_t digit1 = 0, uint8_t digit2 = 0, uint8_t digit3 = 0);
@@ -58,13 +58,10 @@ public:
 private:
 	bool
 		dotset = 0,
-		dotP0 = 0,
-		dotP1 = 0,
-		dotP2 = 0,
-		dotP3 = 0;
-
-	int8_t
-		intPin = -1;
+		dotP0,
+		dotP1,
+		dotP2,
+		dotP3;
 };
 
 #endif
