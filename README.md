@@ -85,7 +85,6 @@ Read key presses when using CH455 with a keypad:
  ```cpp 
 
 uint8_t keyboardData = display.readKeyboard();
-// Interpret keyboardData using provided enums for key positions.
  ``` 
 
 Note: The library is designed to handle numeric displays and does not support alphabetic characters or other symbols.
