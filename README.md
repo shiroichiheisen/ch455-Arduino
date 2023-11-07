@@ -1,89 +1,96 @@
-# ch455 Arduino
+ # ch455 Arduino Library
 
-Library for using the ch455 ic with arduino;
+This is a comprehensive Arduino library for interfacing with the CH455 7-segment LED display driver IC. It provides an easy-to-use interface for controlling the displays and reading key presses.
+ ## Features
 
-## ☕ Using this library
+    Simple interface to set up and control CH455 based displays.
+    Support for changing LED brightness.
+    Capabilities to read key presses from a keypad connected to CH455.
+    Functions to operate in either 7-segment or 8-segment mode.
+    Power management through sleep mode functionality.
 
-To use this library, you need to download, install the library, and include the following file in your project:
+ ## Getting Started
+ ### Installation
 
-```
-#include <ch455.h>
-```
+    Download or clone this repository to your local machine.
+    Unzip and rename the folder to CH455 (if necessary).
+    Move the CH455 folder into your Arduino libraries directory.
+    Restart your Arduino IDE.
+    Include the library with #include <ch455.h> in your sketch.
 
-To use on your code you need to declare the ch455 object and begin with the sda pin, scl pin and led brightness:
+ ### Initialization
 
-```	
-ch455 display;
+Create a CH455 object and begin communication by specifying SDA and SCL pins along with the desired brightness level:
+ ```cpp 
 
-setup{
-display.begin(uint8_t sda, uint8_t scl, uint8_t brightness); //if you want to change sda and scl pins
-display.begin(uint8_t brightness); //for attiny devices or if you dont want to change sda and scl pins
+CH455 display;
+
+void setup() {
+display.begin(uint8_t sda, uint8_t scl, uint8_t brightness); // Standard initialization with custom SDA/SCL
+// or
+display.begin(uint8_t brightness); // ATTiny or default SDA/SCL pins
 }
+ ``` 
 
-//max brightness is 8, min brightness is 1
-//If the brightness is not set, the default brightness is 8
-```
+Brightness ranges from 1 (minimum) to 8 (maximum), with a default of 8 if unspecified.
+ ### Advanced Configuration
 
-You also can enable the ch455, make the mcu enter in sleep mode and change the 8 segment mode to 7 segment mode with the following functions:
+To initialize the display with additional parameters:
+ ```cpp 
 
-```
+void setup() {
 display.begin(uint8_t sda, uint8_t scl, uint8_t brightness, bool enabled, bool sleep, bool sevenSegment);
-display.begin(uint8_t brightness, bool enabled, bool sleep, bool sevenSegment); 
-```
+// or
+display.begin(uint8_t brightness, bool enabled, bool sleep, bool sevenSegment);
+}
+ ``` 
+ ### Displaying Numbers
 
+Send digits to the display, optionally with decimal points:
+ ```cpp 
 
-Now to send numbers to the display you can use the following functions:
+void loop() {
+display.digit(uint8_t digit, uint8_t number, bool dot); // With decimal point
+// or
+display.digit(uint8_t digit, uint8_t number); // Without decimal point
+}
+ ``` 
+ ### Configuration
 
-```	
-display.digit(uint8_t digit, uint8_t number, bool dot);
+Adjust the display configuration at any time:
+ ```cpp 
 
-//digit is the digit on the display
-//number is the number to show on display
-//dot is if you want to show a dot or not with the number
-//if you dont use the dot on display, just dont send it:
-
-display.digit(uint8_t digit, uint8_t number);
-```
-
-To configure the CH455 just use the following function:
-
-```	
 display.configure(uint8_t brightness, bool enabled, bool sleep, bool sevenSegment);
-//max brightness is 8, min brightness is 1
-```
+ ``` 
+ ### Full Display Control
 
-To send to all numbers of the display you can use the following function:
+Control all digits and their respective decimal points:
+ ```cpp 
 
-```	
 display.showWithDots(uint8_t digit0, bool dot0, uint8_t digit1, bool dot1, uint8_t digit2, bool dot2, uint8_t digit3, bool dot3);
-```
-
-If you want so set the dot of all numbers use the following function:
-
-```	
 display.dotPosition(bool dot0, bool dot1, bool dot2, bool dot3);
-```
-
-Now with the dot position set you can call the show function without need to set the dot of each number:
-
-```	
 display.show(uint8_t digit0, uint8_t digit1, uint8_t digit2, uint8_t digit3);
-```
+ ``` 
+ ### Custom Characters
 
-If you want to send a custom number to the display you can use the following function:
+Create and display custom characters on the LED segments:
+ ```cpp 
 
-```
-display.custom(bool a, bool b, bool c, bool d, bool e, bool f, bool g, bool dot);
-```
+display.customDigit(uint8_t digit, bool a, bool b, bool c, bool d, bool e, bool f, bool g, bool dot);
+display.customDigit(uint8_t digit, uint8_t digitData);
+ ``` 
+ ### Keypad Interaction
 
-Now we have the readKey function, this function read the key pressed on the keypad:
+Read key presses when using CH455 with a keypad:
+ ```cpp 
 
-```
-display.readKeyboard();
-//Use the enum to get the key pressed Ex: if the key on the DIG0 and Seg 5 is pressed, the function will return the enum ch455::DIG0_SEG5
-```
+uint8_t keyboardData = display.readKeyboard();
+// Interpret keyboardData using provided enums for key positions.
+ ``` 
 
+Note: The library is designed to handle numeric displays and does not support alphabetic characters or other symbols.
+ ## Contribute
 
-If you use less than 4 digits on your ch455 display, you dont need to set the digit or dot of each digit, only the first digit and dot (depending on the function) is obligatory
+Your contributions are welcome. Please feel free to submit pull requests or open issues to enhance the functionality of this library.
 
-This library only show numbers, dont show letters, dont show symbols, dont show anything else.
+Enjoy building your projects with the CH455 Arduino Library!
