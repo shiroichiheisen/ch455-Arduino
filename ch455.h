@@ -56,6 +56,7 @@ public:
 	void configure(uint8_t brightness, bool enabled = true, bool sleep = false, bool sevenSegment = false);
 
 private:
+	void send(uint8_t id, uint8_t data);
 	bool
 		dotset = 0,
 		dotP0,

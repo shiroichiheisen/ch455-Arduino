@@ -1,7 +1,7 @@
 #include "ch455.h"
 #include "Wire.h"
 
-void send(uint8_t id, uint8_t data)
+void ch455::send(uint8_t id, uint8_t data)
 {
     Wire.beginTransmission(id);
     Wire.write(data);
