@@ -1,5 +1,5 @@
-#ifndef ch_455
-#define ch_455
+#ifndef CH455_H
+#define CH455_H
 
 #include <Arduino.h>
 #include "Wire.h"
@@ -43,9 +43,7 @@ public:
 		DIG3_SEG0_1 = 0x3f,
 	};
 
-	ch455();
-	void begin(uint8_t sda, uint8_t scl, uint8_t ledBrightness = 8, bool enabled = true, bool sleep = false, bool sevenSegment = false);
-	void begin(uint8_t ledBrightness = 8, bool enabled = true, bool sleep = false, bool sevenSegment = false);
+    ch455(TwoWire& i2c);
 	void customDigit(uint8_t digit, bool seg0, bool seg1, bool seg2, bool seg3, bool seg4, bool seg5, bool seg6, bool seg7);
 	void customDigit(uint8_t digit, uint8_t digitData);
 	uint8_t readKeyboard();
@@ -55,14 +53,16 @@ public:
 	void showWithDots(uint8_t digit0, bool dot0 = 0, uint8_t digit1 = 0, bool dot1 = 0, uint8_t digit2 = 0, bool dot2 = 0, uint8_t digit3 = 0, bool dot3 = 0);
 	void configure(uint8_t brightness, bool enabled = true, bool sleep = false, bool sevenSegment = false);
 
+  protected:
+    TwoWire* twoWire;
+
 private:
 	void send(uint8_t id, uint8_t data);
 	bool
-		dotset = 0,
-		dotP0,
-		dotP1,
-		dotP2,
-		dotP3;
+		dotP0 = false,
+		dotP1 = false,
+		dotP2 = false,
+		dotP3 = false;
 };
 
 #endif

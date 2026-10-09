@@ -1,48 +1,43 @@
 #include "ch455.h"
-#include "Wire.h"
+#include "Arduino.h"
 
 void ch455::send(uint8_t id, uint8_t data)
 {
-    Wire.beginTransmission(id);
-    Wire.write(data);
-    Wire.endTransmission();
+    twoWire->beginTransmission(id);
+    twoWire->write(data);
+    twoWire->endTransmission();
 }
 
 void ch455::configure(uint8_t brightness, bool enabled, bool sleep, bool sevenSegment)
 {
-    if (brightness > 8)
-        brightness = 8;
-    else if (brightness < 1)
-        brightness = 1;
+	// brightness value is between 1 and 7 and "full bightness" is 0
+    if (brightness > 7) {
+        brightness = 0;
+	}
+    else if (brightness < 1) {
+        brightness = 0;
+	}
 
-    if (brightness < 8)
-        brightness = (16 * brightness);
-
-    bitWrite(brightness, 0, enabled);
-    bitWrite(brightness, 2, sleep);
+	// put system parameter values into the right position for sending:
+	// we do reuse the variable 'brightness' and bitpositions are according
+	// to the manual:
+	// [KOFF][brightness (3bit)][sevenSegment][sleep]0[enabled] (bits 7..0)
+    brightness = brightness << 4;
     bitWrite(brightness, 3, sevenSegment);
+    bitWrite(brightness, 2, sleep);
+    bitWrite(brightness, 0, enabled);
 
     send(36, brightness);
 }
 
-ch455::ch455() {}
-
-void ch455::begin(uint8_t brightness, bool enabled, bool sleep, bool sevenSegment)
-{
-    Wire.begin();
-    ch455::configure(brightness);
-}
-
-void ch455::begin(uint8_t sda, uint8_t scl, uint8_t brightness, bool enabled, bool sleep, bool sevenSegment)
-{
-    Wire.begin(sda, scl);
-    ch455::configure(brightness);
+ch455::ch455(TwoWire& i2c)  :
+  twoWire(&i2c) {
 }
 
 uint8_t ch455::readKeyboard()
 {
-    Wire.requestFrom(0x4f, 1);
-    return Wire.read();
+    twoWire->requestFrom(0x27, 1);
+    return twoWire->read();
 }
 
 void ch455::customDigit(uint8_t digit, bool seg0, bool seg1, bool seg2, bool seg3, bool seg4, bool seg5, bool seg6, bool seg7)
@@ -71,18 +66,20 @@ void ch455::customDigit(uint8_t digit, uint8_t digitData)
 
 void ch455::digit(uint8_t digit, uint8_t number, bool dot)
 {
-    if (number > 9 || digit > 3)
-    {
-        Serial.println("CH455 Library: Number or digit is too big, max 9 for number and max 3 for digit");
-        return;
+	// if in doubt, use digit 3 to display number
+	if (digit > 3) {
+		digit = 3;
     }
 
     digit += 52;
 
-    uint8_t digitData = 0x3F;
+    //if number not in 0..9, don't display anything.
+    uint8_t digitData = 0x0;
 
     switch (number)
     {
+	case 0:
+	    digitData = 0x3F;
     case 1:
         digitData = 0x06;
         break;
@@ -110,6 +107,9 @@ void ch455::digit(uint8_t digit, uint8_t number, bool dot)
     case 9:
         digitData = 0x6F;
         break;
+    default:
+        digitData = 0x0;
+        break;
     }
 
     bitWrite(digitData, 7, dot);
@@ -126,11 +126,6 @@ void ch455::showWithDots(uint8_t digit0, bool dot0, uint8_t digit1, bool dot1, u
 
 void ch455::show(uint8_t digit0, uint8_t digit1, uint8_t digit2, uint8_t digit3)
 {
-    if (!dotset)
-    {
-        Serial.println("CH455 Library: Please set dot position first.");
-        return;
-    }
     digit(0, digit0, dotP0);
     digit(1, digit1, dotP1);
     digit(2, digit2, dotP2);
@@ -143,5 +138,4 @@ void ch455::dotPosition(bool dot0, bool dot1, bool dot2, bool dot3)
     dotP1 = dot1;
     dotP2 = dot2;
     dotP3 = dot3;
-    dotset = 1;
 }

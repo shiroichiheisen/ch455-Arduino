@@ -16,34 +16,24 @@ This is a comprehensive Arduino library for interfacing with the CH455 7-segment
     Unzip and rename the folder to CH455 (if necessary).
     Move the CH455 folder into your Arduino libraries directory.
     Restart your Arduino IDE.
-    Include the library with #include <ch455.h> in your sketch.
 
  ### Initialization
+You need to include the ch455.h and create a CH455-object.
+Since the I2C-bus is used, you also have to start the Wire-interface.
+The display will be initialized by the first configure call.
+```C++
+#include <ch455.h>
 
-Create a CH455 object and begin communication by specifying SDA and SCL pins along with the desired brightness level:
- ```cpp 
-
-CH455 display;
+ch455 display(Wire);
 
 void setup() {
-display.begin(uint8_t sda, uint8_t scl, uint8_t brightness); // Standard initialization with custom SDA/SCL
-// or
-display.begin(uint8_t brightness); // ATTiny or default SDA/SCL pins
+  Wire.begin(Scl,Sda);
+ 
+  display.configure(uint8_t brightness,bool enabled, bool sleep, bool sevenSegment);
 }
- ``` 
+```
 
 Brightness ranges from 1 (minimum) to 8 (maximum), with a default of 8 if unspecified.
- ### Advanced Configuration
-
-To initialize the display with additional parameters:
- ```cpp 
-
-void setup() {
-display.begin(uint8_t sda, uint8_t scl, uint8_t brightness, bool enabled, bool sleep, bool sevenSegment);
-// or
-display.begin(uint8_t brightness, bool enabled, bool sleep, bool sevenSegment);
-}
- ``` 
  ### Displaying Numbers
 
 Send digits to the display, optionally with decimal points:
